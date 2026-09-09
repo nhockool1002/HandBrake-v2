@@ -1,6 +1,7 @@
 import React from 'react';
 import { TranscodeSettings, VideoSource } from '../../types';
-import { Gauge, Sliders, Settings2 } from 'lucide-react';
+import { Gauge, Sliders, Settings2, FastForward, Rewind, RotateCcw, Volume2, Clock, Info } from 'lucide-react';
+import { formatTime } from '../../utils/handbrakeCli';
 
 interface VideoTabProps {
   settings: TranscodeSettings;
@@ -20,10 +21,25 @@ const PRESET_SPEEDS = [
   'veryslow'
 ] as const;
 
-export const VideoTab: React.FC<VideoTabProps> = ({ settings, onChange }) => {
+const PLAYBACK_SPEED_PRESETS = [
+  { value: 0.25, label: '0.25x', desc: 'Chậm 4x' },
+  { value: 0.5, label: '0.5x', desc: 'Chậm 2x' },
+  { value: 0.75, label: '0.75x', desc: 'Chậm 0.75x' },
+  { value: 1.0, label: '1.0x', desc: 'Chuẩn 1x' },
+  { value: 1.25, label: '1.25x', desc: 'Nhanh 1.25x' },
+  { value: 1.5, label: '1.5x', desc: 'Nhanh 1.5x' },
+  { value: 2.0, label: '2.0x', desc: 'Nhanh 2x' },
+  { value: 4.0, label: '4.0x', desc: 'Nhanh 4x' },
+];
+
+export const VideoTab: React.FC<VideoTabProps> = ({ settings, onChange, source }) => {
   const currentSpeedIdx = PRESET_SPEEDS.indexOf(settings.encoderPreset as any) !== -1 
     ? PRESET_SPEEDS.indexOf(settings.encoderPreset as any) 
     : 4;
+
+  const currentSpeed = settings.speed || 1.0;
+  const originalDuration = source?.duration || 0;
+  const targetDuration = originalDuration > 0 ? originalDuration / currentSpeed : 0;
 
   return (
     <div className="p-5 text-xs text-[#d0d0de] space-y-6 max-w-5xl">
@@ -208,6 +224,191 @@ export const VideoTab: React.FC<VideoTabProps> = ({ settings, onChange }) => {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Video Speed & Playback (Tua Nhanh / Tua Chậm) */}
+      <div className="bg-[#23232c] border border-[#383848] rounded-lg p-4 shadow-xs space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#3c3c4e] pb-2">
+          <div className="flex items-center space-x-2">
+            <FastForward className="w-4 h-4 text-amber-400" />
+            <h3 className="font-semibold text-white text-sm">
+              Tua Nhanh / Tua Chậm (Video Speed & Time Scaling)
+            </h3>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            {currentSpeed === 1.0 ? (
+              <span className="px-2.5 py-0.5 rounded text-[11px] bg-[#323242] text-[#9a9ab0] font-medium border border-[#444458]">
+                1.0x (Tốc độ chuẩn)
+              </span>
+            ) : currentSpeed > 1.0 ? (
+              <span className="px-2.5 py-0.5 rounded text-[11px] bg-amber-950/70 border border-amber-500/60 text-amber-300 font-semibold flex items-center space-x-1">
+                <FastForward className="w-3 h-3" />
+                <span>Tua nhanh {currentSpeed.toFixed(2)}x (Tăng tốc)</span>
+              </span>
+            ) : (
+              <span className="px-2.5 py-0.5 rounded text-[11px] bg-blue-950/70 border border-blue-500/60 text-blue-300 font-semibold flex items-center space-x-1">
+                <Rewind className="w-3 h-3" />
+                <span>Tua chậm {currentSpeed.toFixed(2)}x (Slow-motion)</span>
+              </span>
+            )}
+
+            {currentSpeed !== 1.0 && (
+              <button
+                type="button"
+                onClick={() => onChange({ speed: 1.0 })}
+                className="flex items-center space-x-1 px-2 py-0.5 rounded bg-[#323242] hover:bg-[#3e3e52] text-[#c0c0d4] hover:text-white border border-[#444458] text-[11px] transition-colors"
+                title="Đặt lại về tốc độ bình thường 1.0x"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Đặt lại 1.0x</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Presets */}
+        <div>
+          <label className="block text-[#9a9ab0] mb-1.5 font-medium">Mức tốc độ nhanh (Quick Presets):</label>
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+            {PLAYBACK_SPEED_PRESETS.map((preset) => {
+              const isSelected = Math.abs(currentSpeed - preset.value) < 0.001;
+              return (
+                <button
+                  key={preset.value}
+                  type="button"
+                  onClick={() => onChange({ speed: preset.value })}
+                  className={`py-1.5 px-2 rounded text-center border transition-all ${
+                    isSelected
+                      ? 'bg-amber-600 text-white border-amber-400 font-bold shadow-xs'
+                      : 'bg-[#1b1b22] hover:bg-[#282834] text-[#c0c0d4] border-[#3e3e50]'
+                  }`}
+                >
+                  <div className="font-mono text-xs">{preset.label}</div>
+                  <div className="text-[10px] opacity-75 truncate">{preset.desc}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Continuous Slider & Manual Input */}
+        <div className="space-y-2 bg-[#1b1b22] border border-[#363646] rounded p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[#9a9ab0] font-medium">Điều chỉnh tốc độ mượt (0.25x - 4.00x):</span>
+            <div className="flex items-center space-x-2">
+              <input
+                id="input-speed-multiplier"
+                type="number"
+                min="0.25"
+                max="8.0"
+                step="0.05"
+                value={currentSpeed}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value);
+                  if (!isNaN(val) && val > 0) {
+                    onChange({ speed: Math.min(8, Math.max(0.1, val)) });
+                  }
+                }}
+                className="w-20 bg-[#262632] border border-[#444458] rounded px-2 py-0.5 text-right font-mono text-white text-xs font-bold"
+              />
+              <span className="text-amber-400 font-mono font-bold">x</span>
+            </div>
+          </div>
+
+          <input
+            id="range-speed-slider"
+            type="range"
+            min="0.25"
+            max="4.0"
+            step="0.05"
+            value={currentSpeed}
+            onChange={(e) => onChange({ speed: parseFloat(e.target.value) })}
+            className="w-full accent-amber-500 cursor-pointer h-2 bg-[#2d2d3c] rounded-lg"
+          />
+
+          <div className="flex justify-between text-[10px] text-[#707084] font-mono">
+            <span>0.25x (Chậm nhất)</span>
+            <span>0.5x</span>
+            <span className="text-white font-bold">1.0x (Chuẩn)</span>
+            <span>2.0x</span>
+            <span>4.0x (Nhanh nhất)</span>
+          </div>
+        </div>
+
+        {/* Live Duration Simulation & Audio Pitch Controls */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          {/* Duration info */}
+          <div className="bg-[#1b1b22] border border-[#363646] rounded p-3 flex items-start space-x-2.5">
+            <Clock className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+            <div className="space-y-1">
+              <div className="font-medium text-white text-xs">Thời lượng ước tính:</div>
+              {originalDuration > 0 ? (
+                <div className="text-[11px] text-[#c0c0d2] space-y-0.5">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#88889c]">Gốc:</span>
+                    <span className="font-mono text-white">{formatTime(originalDuration)}</span>
+                    <span className="text-[#88889c]">➔</span>
+                    <span className="text-[#88889c]">Sau tua:</span>
+                    <span className="font-mono text-emerald-400 font-bold">{formatTime(targetDuration)}</span>
+                  </div>
+                  <div className="text-[10px] text-[#88889c]">
+                    {currentSpeed > 1.0
+                      ? `Rút ngắn ${((1 - 1 / currentSpeed) * 100).toFixed(0)}% thời gian phát video`
+                      : currentSpeed < 1.0
+                      ? `Kéo dài thêm ${((1 / currentSpeed - 1) * 100).toFixed(0)}% thời gian phát video`
+                      : 'Thời lượng không đổi'}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-[11px] text-[#88889c]">
+                  Hãy mở một video nguồn để xem tính toán thời lượng sau khi tua
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Audio Pitch & Scaling Mode */}
+          <div className="bg-[#1b1b22] border border-[#363646] rounded p-3 space-y-2.5">
+            <label className="flex items-start space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={settings.pitchCorrection}
+                onChange={(e) => onChange({ pitchCorrection: e.target.checked })}
+                className="rounded bg-[#262632] border-[#444458] text-amber-500 focus:ring-0 mt-0.5"
+              />
+              <div>
+                <span className="font-medium text-white text-xs flex items-center space-x-1.5">
+                  <Volume2 className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Bảo toàn cao độ âm thanh (Keep Audio Pitch)</span>
+                </span>
+                <p className="text-[10px] text-[#88889c] mt-0.5">
+                  Giữ giọng nói tự nhiên, không bị méo giọng the thé (chipmunk) hoặc ồm ồm khi thay đổi tốc độ
+                </p>
+              </div>
+            </label>
+
+            <div className="pt-2 border-t border-[#2e2e3c] flex items-center justify-between text-[11px]">
+              <span className="text-[#88889c]">Phương thức tua:</span>
+              <select
+                value={settings.speedMode || 'pts'}
+                onChange={(e) => onChange({ speedMode: e.target.value as any })}
+                className="bg-[#262632] border border-[#444458] rounded px-2 py-0.5 text-white text-[11px]"
+              >
+                <option value="pts">PTS (Presentation Time Stamp) - Mượt mà</option>
+                <option value="drop_dup">Drop/Duplicate Frames - Giật ngắt quãng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Technical Notice */}
+        <div className="bg-[#1e1e28] border border-[#323242] rounded px-3 py-2 flex items-center space-x-2 text-[11px] text-[#9090a6]">
+          <Info className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>
+            Tính năng tua video sử dụng bộ lọc thời gian <code className="text-amber-300 font-mono bg-black/40 px-1 py-0.5 rounded">setpts</code> và bộ lọc âm thanh <code className="text-amber-300 font-mono bg-black/40 px-1 py-0.5 rounded">atempo</code>. Bạn cũng có thể xem thử trực tiếp trong cửa sổ <strong>Preview</strong>.
+          </span>
         </div>
       </div>
 

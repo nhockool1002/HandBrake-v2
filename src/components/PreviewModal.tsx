@@ -9,7 +9,8 @@ import {
   Volume2, 
   VolumeX, 
   Eye, 
-  X 
+  X,
+  Gauge
 } from 'lucide-react';
 
 interface PreviewModalProps {
@@ -31,12 +32,25 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
   const [duration, setDuration] = useState(source?.duration || 100);
   const [isMuted, setIsMuted] = useState(false);
   const [showFiltered, setShowFiltered] = useState(true);
+  const [playbackSpeed, setPlaybackSpeed] = useState(settings.speed || 1.0);
 
   useEffect(() => {
     if (source?.duration) {
       setDuration(source.duration);
     }
   }, [source]);
+
+  useEffect(() => {
+    if (settings.speed) {
+      setPlaybackSpeed(settings.speed);
+    }
+  }, [settings.speed]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed, isPlaying]);
 
   if (!isOpen) return null;
 
@@ -135,6 +149,14 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
                     <span className="text-blue-400">Sharpen: {settings.filters.sharpen}</span>
                   </>
                 )}
+                {playbackSpeed !== 1.0 && (
+                  <>
+                    <span className="text-white/40">•</span>
+                    <span className="text-amber-400 font-bold">
+                      Tốc độ: {playbackSpeed}x
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           ) : (
@@ -198,6 +220,27 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
+
+              {/* Playback speed selector */}
+              <div className="flex items-center space-x-1 bg-[#282836] border border-[#3e3e50] rounded-md px-1.5 py-0.5 ml-2">
+                <span className="text-[10px] text-[#8e8ea2] flex items-center space-x-1 pr-1 border-r border-[#3a3a4c]">
+                  <Gauge className="w-3 h-3 text-amber-400" />
+                  <span className="hidden sm:inline">Tốc độ:</span>
+                </span>
+                {[0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map((rate) => (
+                  <button
+                    key={rate}
+                    onClick={() => setPlaybackSpeed(rate)}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-mono transition-colors ${
+                      playbackSpeed === rate
+                        ? 'bg-amber-500 text-black font-bold'
+                        : 'text-[#9e9eb0] hover:text-white hover:bg-[#343444]'
+                    }`}
+                  >
+                    {rate}x
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex items-center space-x-4">

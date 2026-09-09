@@ -87,6 +87,11 @@ export interface TranscodeSettings {
   encoderLevel: 'auto' | '3.1' | '4.0' | '4.1' | '4.2' | '5.0' | '5.1' | '5.2';
   extraOpts: string;
 
+  // Video Speed (Tua nhanh, tua chậm)
+  speed: number; // Playback speed multiplier (e.g. 0.25 to 4.0, default 1.0)
+  pitchCorrection: boolean; // Preserve natural pitch of audio when speeding up / slowing down
+  speedMode: 'pts' | 'drop_dup'; // Method of scaling time
+
   // Audio
   audio: {
     codec: 'aac' | 'ac3' | 'mp3' | 'opus' | 'flac' | 'passthru';

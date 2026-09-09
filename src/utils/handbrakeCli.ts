@@ -106,6 +106,15 @@ export function generateCliCommand(source: VideoSource, settings: TranscodeSetti
     parts.push('--grayscale');
   }
 
+  // Video Speed (Tua nhanh, tua chậm / Time scaling)
+  if (settings.speed && settings.speed !== 1.0) {
+    const ptsFactor = (1 / settings.speed).toFixed(4);
+    parts.push(`--vfilter "setpts=${ptsFactor}*PTS"`);
+    if (settings.pitchCorrection) {
+      parts.push(`--afilter "atempo=${settings.speed}"`);
+    }
+  }
+
   // Audio
   parts.push(`-E ${settings.audio.codec}`);
   if (settings.audio.codec !== 'passthru') {

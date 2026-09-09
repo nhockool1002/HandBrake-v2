@@ -38,6 +38,10 @@ export const defaultSettings: TranscodeSettings = {
   encoderLevel: '4.0',
   extraOpts: '',
 
+  speed: 1.0,
+  pitchCorrection: true,
+  speedMode: 'pts',
+
   audio: {
     codec: 'aac',
     bitrate: 160,

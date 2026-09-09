@@ -38,9 +38,6 @@ export const defaultSettings: TranscodeSettings = {
   encoderLevel: '4.0',
   extraOpts: '',
 
-  videoSpeed: 1,
-  speedAudioPitchCompensation: true,
-
   audio: {
     codec: 'aac',
     bitrate: 160,
@@ -284,36 +281,6 @@ export const BUILTIN_PRESETS: TranscodePreset[] = [
         gain: 0,
         drc: 0
       }
-    }
-  },
-  {
-    id: 'fast-motion-2x',
-    name: 'Fast Motion 2.0x (Tua nhanh 2x)',
-    category: 'Production',
-    description: 'Speeds up video and audio 2x for time-lapse or high-speed summaries while maintaining smooth playback.',
-    settings: {
-      ...defaultSettings,
-      videoSpeed: 2.0,
-      speedAudioPitchCompensation: true,
-      videoCodec: 'x264',
-      rf: 22,
-      encoderPreset: 'fast',
-      resolutionLimit: '1080p'
-    }
-  },
-  {
-    id: 'slow-motion-05x',
-    name: 'Slow Motion 0.5x (Tua chậm 0.5x)',
-    category: 'Production',
-    description: 'Slows down playback to half speed (0.5x) for cinematic slow motion and frame-by-frame analysis.',
-    settings: {
-      ...defaultSettings,
-      videoSpeed: 0.5,
-      speedAudioPitchCompensation: true,
-      videoCodec: 'x264',
-      rf: 20,
-      encoderPreset: 'medium',
-      resolutionLimit: '1080p'
     }
   }
 ];

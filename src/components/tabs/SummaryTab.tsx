@@ -101,11 +101,6 @@ export const SummaryTab: React.FC<SummaryTabProps> = ({ settings, onChange, sour
                   Preset: {settings.encoderPreset},{' '}
                   Resolution: {settings.resolutionLimit === 'none' ? 'Same as source' : `Up to ${settings.resolutionLimit}`},{' '}
                   Framerate: {settings.framerate === 'auto' ? 'Same as source' : `${settings.framerate} fps`}
-                  {settings.videoSpeed && settings.videoSpeed !== 1 && (
-                    <span className="text-amber-400 font-semibold">
-                      , Tốc độ phát: {settings.videoSpeed}x ({settings.videoSpeed > 1 ? 'Tua nhanh' : 'Tua chậm'})
-                    </span>
-                  )}
                 </span>
               </div>
             </div>

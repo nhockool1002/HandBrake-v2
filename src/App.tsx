@@ -188,10 +188,6 @@ export const App: React.FC = () => {
     );
 
     addLog(`Starting encode job ${jobId}...`);
-    const currentJob = queue.find((j) => j.id === jobId);
-    if (currentJob?.settings.videoSpeed && currentJob.settings.videoSpeed !== 1) {
-      addLog(`[video] Speed timing filter: ${currentJob.settings.videoSpeed}x multiplier (pts: ${(1 / currentJob.settings.videoSpeed).toFixed(4)}*PTS, pitch compensation: ${currentJob.settings.speedAudioPitchCompensation ? 'enabled' : 'disabled'})`);
-    }
     addLog(`libhb: sync audio & video streams`);
     addLog(`x264 [info]: profile High, level 4.0, 4:2:0, 8-bit`);
     addLog(`x264 [info]: 264 - core 164 r3108 - H.264/MPEG-4 AVC codec`);

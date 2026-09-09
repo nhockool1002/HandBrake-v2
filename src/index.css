@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Custom sleek scrollbar for desktop app feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(20, 20, 25, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 120, 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(130, 130, 160, 0.6);
+}

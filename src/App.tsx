@@ -176,7 +176,7 @@ export const App: React.FC = () => {
   };
 
   // Encoding Simulation Engine
-  const encodeTimerRef = useRef<number | null>(null);
+  const encodeTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const startEncodingJob = (jobId: string) => {
     setIsEncoding(true);

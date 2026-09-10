@@ -1,5 +1,6 @@
 {
-  "name": "handbrake-web",
+  "name": "handbrake-dev1002",
+  "productName": "HandBrake-Dev1002",
   "private": true,
   "version": "2.0.0",
   "type": "module",
@@ -13,8 +14,8 @@
     "package:win": "tsc && vite build && electron-builder --win nsis"
   },
   "build": {
-    "appId": "fr.handbrake.app",
-    "productName": "HandBrake",
+    "appId": "com.dev1002.handbrake",
+    "productName": "HandBrake-Dev1002",
     "directories": {
       "output": "dist-electron"
     },
@@ -27,7 +28,24 @@
         "dmg"
       ],
       "category": "public.app-category.video",
-      "identity": null
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "title": "HandBrake-Dev1002",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "win": {
       "target": [

@@ -51,7 +51,7 @@ jobs:
       - name: Upload macOS DMG Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HandBrake-macOS-DMG
+          name: HandBrake-Dev1002-macOS-DMG
           path: dist-electron/*.dmg
           if-no-files-found: error
 
@@ -85,7 +85,7 @@ jobs:
       - name: Upload Windows EXE Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HandBrake-Windows-EXE
+          name: HandBrake-Dev1002-Windows-EXE
           path: dist-electron/*.exe
           if-no-files-found: error
 
@@ -100,13 +100,13 @@ jobs:
       - name: Download macOS DMG Artifact
         uses: actions/download-artifact@v4
         with:
-          name: HandBrake-macOS-DMG
+          name: HandBrake-Dev1002-macOS-DMG
           path: dist-release
 
       - name: Download Windows EXE Artifact
         uses: actions/download-artifact@v4
         with:
-          name: HandBrake-Windows-EXE
+          name: HandBrake-Dev1002-Windows-EXE
           path: dist-release
 
       - name: Publish GitHub Release

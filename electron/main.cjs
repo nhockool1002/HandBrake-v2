@@ -7,7 +7,7 @@ function createWindow() {
     height: 820,
     minWidth: 920,
     minHeight: 640,
-    title: 'HandBrake',
+    title: 'HandBrake-Dev1002',
     backgroundColor: '#18181f',
     webPreferences: {
       nodeIntegration: false,

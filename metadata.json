@@ -1,6 +1,6 @@
 {
-  "name": "HandBrake",
-  "description": "The open source video transcoder for converting video from nearly any format to modern codecs.",
+  "name": "HandBrake-Dev1002",
+  "description": "HandBrake-Dev1002: The open source video transcoder for converting video from nearly any format to modern codecs.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -52,8 +52,8 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1.5 font-semibold text-white mr-2">
             <span className="text-lg">🍍</span>
-            <span className="text-sm tracking-tight text-white font-medium">HandBrake</span>
-            <span className="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 px-1 rounded">v2.0 Web</span>
+            <span className="text-sm tracking-tight text-white font-medium">HandBrake-Dev1002</span>
+            <span className="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 px-1 rounded">v2.0</span>
           </div>
 
           <div className="relative inline-block">
@@ -301,15 +301,15 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-3 mb-4">
               <span className="text-4xl">🍍</span>
               <div>
-                <h2 className="text-xl font-bold text-white">HandBrake</h2>
+                <h2 className="text-xl font-bold text-white">HandBrake-Dev1002</h2>
                 <p className="text-xs text-[#9d9dae]">The open source video transcoder</p>
               </div>
             </div>
             <p className="text-xs text-[#c4c4d4] leading-relaxed mb-4">
-              HandBrake is a tool for converting video from nearly any format to a selection of modern, widely supported codecs. This web application brings the full HandBrake workflow to your browser with interactive presets, filter simulation, queue management, and HandBrakeCLI command generation.
+              HandBrake-Dev1002 is a tool for converting video from nearly any format to a selection of modern, widely supported codecs. This application brings the full HandBrake workflow with interactive presets, filter simulation, queue management, and HandBrakeCLI command generation.
             </p>
             <div className="bg-[#1a1a22] border border-[#363644] rounded p-3 text-[11px] space-y-1 mb-5 text-[#8f8fa4]">
-              <div><strong className="text-[#c4c4d4]">Version:</strong> 2.0.0 Web Edition</div>
+              <div><strong className="text-[#c4c4d4]">Version:</strong> 2.0.0 (Dev1002)</div>
               <div><strong className="text-[#c4c4d4]">Engine:</strong> libhb Web Transcoder Pipeline</div>
               <div><strong className="text-[#c4c4d4]">License:</strong> GNU General Public License v2</div>
             </div>

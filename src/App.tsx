@@ -60,7 +60,7 @@ export const App: React.FC = () => {
       id: 'log-0',
       timestamp: new Date().toLocaleTimeString(),
       level: 'info',
-      message: 'HandBrake 2.0.0 Web Edition (x86_64) initialized.'
+      message: 'HandBrake-Dev1002 2.0.0 initialized.'
     },
     {
       id: 'log-1',

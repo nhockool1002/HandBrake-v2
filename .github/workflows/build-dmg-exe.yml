@@ -34,7 +34,10 @@ jobs:
           node-version: 22
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          rm -f package-lock.json
+          npm install
+          npm install --no-save @rollup/rollup-darwin-arm64 @rollup/rollup-darwin-x64 || true
 
       - name: Compile and Build Web App
         run: npm run build
@@ -65,7 +68,11 @@ jobs:
           node-version: 22
 
       - name: Install Dependencies
-        run: npm install
+        shell: bash
+        run: |
+          rm -f package-lock.json
+          npm install
+          npm install --no-save @rollup/rollup-win32-x64-msvc || true
 
       - name: Compile and Build Web App
         run: npm run build
